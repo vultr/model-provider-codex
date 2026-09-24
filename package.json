@@ -1,0 +1,44 @@
+{
+  "name": "@vultr/model-provider-codex",
+  "version": "0.0.1",
+  "description": "Vultr Inference for Codex CLI: the live /v1/models catalog as a Codex profile and model catalog",
+  "author": "Matt Harris <mharris@vultr.com>",
+  "maintainers": ["Matt Harris <mharris@vultr.com>"],
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "codex",
+    "vultr",
+    "model-provider"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vultr/model-provider-codex.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "vultr-codex": "./dist/vultr-codex.js"
+  },
+  "files": [
+    "dist",
+    "prompts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "esbuild bin/vultr-codex.ts --bundle --platform=node --format=esm --target=node20 --outfile=dist/vultr-codex.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test \"test/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vultr/model-catalog": "git+https://github.com/vultr/model-catalog-typescript.git#v0.0.1",
+    "esbuild": "^0.25.0",
+    "smol-toml": "^1.8.0",
+    "typescript": "^5.9.0"
+  }
+}
