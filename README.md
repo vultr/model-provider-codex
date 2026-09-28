@@ -77,7 +77,7 @@ pass `--force`.
 | `base_instructions` | `prompts/base_instructions.md` |
 | everything else | fixed: `unified_exec` shell, freeform `apply_patch`, no verbosity, no reasoning summary |
 
-Offered: text output, `is_ready`, tool calling, and a context window.
+Offered: text output, `is_ready`, tool calling, and a context window (the catalog's `isAgentModel`).
 
 `base_instructions` is the entire system prompt Codex sends, not an addition to
 it. `prompts/base_instructions.md` is the prompt Codex sends to a model it has

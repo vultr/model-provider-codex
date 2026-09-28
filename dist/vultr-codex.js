@@ -66,6 +66,9 @@ function normalizeModel(document) {
 function isChatModel(model) {
   return model.outputModalities.includes("text");
 }
+function isAgentModel(model) {
+  return isChatModel(model) && model.isReady && model.tools && model.contextWindow !== null;
+}
 function acceptsInput(model, modality) {
   return model.inputModalities.includes(modality);
 }
@@ -226,7 +229,7 @@ function defaultReasoningLevel(model, levels) {
   return preferred ?? efforts.find((effort) => effort !== "none") ?? null;
 }
 function isUsable(model) {
-  return isChatModel(model) && model.isReady && model.tools && model.contextWindow !== null;
+  return isAgentModel(model);
 }
 function toCodexModel(model, priority) {
   const levels = reasoningLevels(model);

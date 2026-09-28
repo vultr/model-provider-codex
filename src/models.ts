@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { acceptsInput, isChatModel, type CatalogModel } from "@vultr/model-catalog";
+import { acceptsInput, isAgentModel, type CatalogModel } from "@vultr/model-catalog";
 
 // Codex's reasoning efforts, lowest first. A catalog effort outside this list is dropped.
 export const EFFORTS = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"] as const;
@@ -76,7 +76,7 @@ export function defaultReasoningLevel(model: CatalogModel, levels: ReasoningLeve
 
 // Codex is an agent: a model that cannot call tools, or has no context window to budget against, is not offered.
 export function isUsable(model: CatalogModel): boolean {
-  return isChatModel(model) && model.isReady && model.tools && model.contextWindow !== null;
+  return isAgentModel(model);
 }
 
 export function toCodexModel(model: CatalogModel, priority: number): CodexModel {
