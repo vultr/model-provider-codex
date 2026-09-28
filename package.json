@@ -1,6 +1,6 @@
 {
   "name": "@vultr/model-provider-codex",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Vultr Inference for Codex CLI: the live /v1/models catalog as a Codex profile and model catalog",
   "author": "Matt Harris <mharris@vultr.com>",
   "maintainers": ["Matt Harris <mharris@vultr.com>"],
