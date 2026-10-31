@@ -8,10 +8,13 @@ import { DEFAULT_BASE_URL, loadCatalog } from "@vultr/model-catalog";
 
 import { toCodexCatalog, type CodexCatalog } from "./models.ts";
 import { API_KEY_ENV, PROFILE, applyProfile, isManaged, parseProfile, renderProfile } from "./profile.ts";
+import { VERSION } from "./version.ts";
 
 export const BASE_URL_ENV = "VULTR_INFERENCE_BASE_URL";
 // A session start within this window reuses the cached catalog instead of fetching.
 const REFRESH_MAX_AGE_MS = 10 * 60_000;
+// Goes in front of the catalog library's own User-Agent.
+const USER_AGENT = `vultr-model-provider-codex/${VERSION}`;
 
 export interface Paths {
   codexHome: string;
@@ -111,6 +114,7 @@ export async function refresh(options: Options): Promise<CodexCatalog> {
   const catalog = await loadCatalog({
     baseUrl: options.baseUrl,
     cachePath: p.cache,
+    userAgent: USER_AGENT,
     timeoutMs: options.hook ? 5_000 : 15_000,
     ...(options.hook ? { maxAgeMs: REFRESH_MAX_AGE_MS } : {}),
   });

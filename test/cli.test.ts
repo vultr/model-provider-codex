@@ -6,18 +6,22 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, before, test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 import { main, paths } from "../src/cli.ts";
 import { parseProfile } from "../src/profile.ts";
+import { VERSION } from "../src/version.ts";
 import { document } from "./fixture.ts";
 
 let server: Server;
 let baseUrl: string;
 let catalog: unknown[] = [];
+let agents: (string | undefined)[] = [];
 
 before(async () => {
   server = createServer((req, res) => {
+    agents.push(req.headers["user-agent"]);
     if (req.url !== "/v1/models" || catalog.length === 0) {
       res.writeHead(503).end();
       return;
@@ -103,6 +107,21 @@ test("a failed refresh keeps the last catalog, and the hook never fails", async 
   const empty = mkdtempSync(join(tmpdir(), "vultr-codex-"));
   assert.equal(await run(empty, "refresh", "--hook"), 0);
   assert.equal(existsSync(paths(empty).catalog), false);
+});
+
+test("the catalog request names this tool and its version, from the source and from the bundle", async () => {
+  catalog = [document()];
+  const { version } = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as { version: string };
+  assert.equal(VERSION, version, "set src/version.ts to the package version, then npm run build");
+  agents = [];
+  assert.equal(await run(mkdtempSync(join(tmpdir(), "vultr-codex-")), "refresh"), 0);
+  const bundle = fileURLToPath(new URL("../dist/vultr-codex.js", import.meta.url));
+  const home = mkdtempSync(join(tmpdir(), "vultr-codex-"));
+  await promisify(execFile)(process.execPath, [bundle, "refresh", "--codex-home", home, "--base-url", baseUrl]);
+  assert.equal(agents.length, 2);
+  for (const agent of agents) {
+    assert.ok(agent?.startsWith(`vultr-model-provider-codex/${version} vultr-model-catalog/`), agent);
+  }
 });
 
 test("uninstall removes what install wrote", async () => {
