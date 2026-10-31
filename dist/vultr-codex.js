@@ -1175,7 +1175,7 @@ function isManaged(text) {
 }
 
 // src/version.ts
-var VERSION2 = "0.0.4";
+var VERSION2 = "0.0.5";
 
 // src/cli.ts
 var BASE_URL_ENV = "VULTR_INFERENCE_BASE_URL";
