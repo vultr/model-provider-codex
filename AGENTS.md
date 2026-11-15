@@ -39,9 +39,24 @@ Human overview, mapping table and install: `README.md`.
 - **Siblings:** `model-provider-pi`, `model-provider-openclaw`,
   `model-provider-opencode`. Same catalog library, same usability rules
 
+## Validation
+
+Fast (inner loop):
+- `node --test test/<name>.test.ts` - one test file. `npm test -- <path>`
+  does not narrow: the script's glob still runs every file.
+  `test/bundle.test.ts` fails until `npm run build`, so leave it out here
+- `node --test --test-name-pattern "<name>" test/<name>.test.ts` - one test
+- `npm run typecheck` - types only
+
+Full (once, before calling a change complete):
+- `npm run build`, then `npm run typecheck` and `npm test` must pass
+
+Heavy (never in the inner loop; run once at the end in the background):
+- the checks against the installed Codex in a throwaway `CODEX_HOME`
+  (below, and the README's key-free capture setup)
+
 ## Working here
 
-- `npm run typecheck` and `npm test` must pass
 - `dist/vultr-codex.js` is committed and must be current: `npm run build` after
   any source change, in the same commit. `test/bundle.test.ts` fails otherwise.
   Node does not strip types under `node_modules`, and a git dependency's
