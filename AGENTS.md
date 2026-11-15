@@ -55,10 +55,3 @@ Human overview, mapping table and install: `README.md`.
   silently; trusting a hook needs the TUI
 - When Codex is upgraded, recapture `prompts/base_instructions.md` (README,
   Development) and rerun the checks against the new binary
-- Put lasting explanation in `docs/` or the README, not in the source. If a
-  comment is needed, make it short. Docs describe current behavior, not history
-- Write commit messages to the Conventional Commits spec
-- No em dashes or en dashes anywhere: prose, comments, commit messages and
-  docs use plain hyphens, `·`, or `:`
-- No AI trailers on commits (`Co-Authored-By`, `Generated with`, ...)
-- Never force-push; never rewrite pushed history
