@@ -18,10 +18,12 @@ let server: Server;
 let baseUrl: string;
 let catalog: unknown[] = [];
 let agents: (string | undefined)[] = [];
+let keys: (string | undefined)[] = [];
 
 before(async () => {
   server = createServer((req, res) => {
     agents.push(req.headers["user-agent"]);
+    keys.push(req.headers["authorization"]);
     if (req.url !== "/v1/models" || catalog.length === 0) {
       res.writeHead(503).end();
       return;
@@ -121,6 +123,23 @@ test("the catalog request names this tool and its version, from the source and f
   assert.equal(agents.length, 2);
   for (const agent of agents) {
     assert.ok(agent?.startsWith(`vultr-model-provider-codex/${version} vultr-model-catalog/`), agent);
+  }
+});
+
+// The gateway answers the catalog for the key that asks, so the read carries the key.
+test("the catalog request carries the key when one is set, and none otherwise", async () => {
+  catalog = [document()];
+  const saved = process.env["VULTR_INFERENCE_API_KEY"];
+  try {
+    delete process.env["VULTR_INFERENCE_API_KEY"];
+    keys = [];
+    assert.equal(await run(mkdtempSync(join(tmpdir(), "vultr-codex-")), "refresh"), 0);
+    process.env["VULTR_INFERENCE_API_KEY"] = "test-key";
+    assert.equal(await run(mkdtempSync(join(tmpdir(), "vultr-codex-")), "refresh"), 0);
+    assert.deepEqual(keys, [undefined, "Bearer test-key"]);
+  } finally {
+    if (saved === undefined) delete process.env["VULTR_INFERENCE_API_KEY"];
+    else process.env["VULTR_INFERENCE_API_KEY"] = saved;
   }
 });
 

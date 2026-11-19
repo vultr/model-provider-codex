@@ -88,7 +88,7 @@ Copyright OpenAI.
 
 | Variable | Meaning |
 | --- | --- |
-| `VULTR_INFERENCE_API_KEY` | Sent by Codex as the Bearer token |
+| `VULTR_INFERENCE_API_KEY` | Sent by Codex as the Bearer token, and by `refresh` with the catalog read when set, so the list is the one that key gets |
 | `VULTR_INFERENCE_BASE_URL` | Default for `--base-url` at install; the profile and hook keep the value install used |
 | `CODEX_HOME` | Default for `--codex-home` |
 

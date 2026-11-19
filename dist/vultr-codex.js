@@ -1250,8 +1250,10 @@ async function writeAtomic(path, text) {
 }
 async function refresh(options) {
   const p = paths(options.codexHome);
+  const key = process.env[API_KEY_ENV];
   const catalog = await loadCatalog({
     baseUrl: options.baseUrl,
+    ...key ? { apiKey: key } : {},
     cachePath: p.cache,
     userAgent: USER_AGENT2,
     timeoutMs: options.hook ? 5e3 : 15e3,

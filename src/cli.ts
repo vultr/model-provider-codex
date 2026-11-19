@@ -111,8 +111,11 @@ async function writeAtomic(path: string, text: string): Promise<void> {
 // Codex refuses to start on an empty or unparsable catalog, so an empty result never replaces a good file.
 export async function refresh(options: Options): Promise<CodexCatalog> {
   const p = paths(options.codexHome);
+  // The catalog asks for no key. One that is set goes with the read, so the list is the one that key gets.
+  const key = process.env[API_KEY_ENV];
   const catalog = await loadCatalog({
     baseUrl: options.baseUrl,
+    ...(key ? { apiKey: key } : {}),
     cachePath: p.cache,
     userAgent: USER_AGENT,
     timeoutMs: options.hook ? 5_000 : 15_000,
